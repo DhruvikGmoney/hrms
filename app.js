@@ -1,7 +1,16 @@
-const express = require("express");
+const { port } = require('./Config/Config');
+const express = require('express');
 const app = express();
-const port = process.env.PORT || 8000;
+const cors = require('cors');
+const indexRouter = require('./Routers/index');
+const database = require('./Config/Database');
 
-app.get("/", (req, res) => res.send("Hello Dhruvik"));
+database();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(indexRouter);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => {
+    console.log(`Server is Running on Port No :- http://localhost:${port}`);
+}) 
