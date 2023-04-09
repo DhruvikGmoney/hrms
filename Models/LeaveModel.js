@@ -1,20 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 mongoose.pluralize(null);
 
-const LeaveSchema = new Schema({
-    employee_id: { type: String, unique: true, required: true, trim: true },
-    type: { type: String, unique: true, required: true, trim: true },
-    start_date: { type: String, trim: true },
-    end_date: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+const LeaveSchema = new Schema(
+  {
+    employee_id: {
+      type: Schema.Types.ObjectId,
+      ref: "employee",
+      required: true,
+    },
+    type: { type: String, required: true, trim: true },
+    start_date: { type: Date, required: true },
+    end_date: { type: Date, required: true },
+    description: { type: String, trim: true },
     status: { type: Date, required: true, trim: true },
-    is_verified: { type: String, required: true, trim: true },
-    is_active: { type: String, trim: true },
-    is_approved: { type: String, trim: true },
-    approved_by: { type: String, trim: true },
-    modifyed_by: { type: String, trim: true },
-},
-    { versionKey: false ,timestamps: true});
+    is_verified: { type: Boolean, default: false },
+    is_active: { type: Boolean, default: false },
+    is_approved: { type: Boolean, default: false },
+    approved_by: { type: Schema.Types.ObjectId, ref: "employee" },
+    modifyed_by: { type: Schema.Types.ObjectId, ref: "employee" },
+  },
+  { versionKey: false, timestamps: true }
+);
 
-module.exports = mongoose.model('leave', LeaveSchema);
+module.exports = mongoose.model("leave", LeaveSchema);
