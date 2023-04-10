@@ -65,6 +65,23 @@ module.exports = {
     }
     // return attendanceModel.findOneAndUpdate(attendance_id, body);
   },
+  updateAttendanceStatus: async (req, res) => {
+    try {
+
+      const { attendance_id, status } = req.params
+      const allAttendance = await attendanceModel.findByIdAndUpdate(attendance_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Attendance Status Updated Successfully", allAttendance });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(attendance_id, body);
+  },
   deleteAttendance: async (req, res) => {
     try {
 

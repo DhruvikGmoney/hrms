@@ -73,6 +73,23 @@ module.exports = {
     }
     // return employeeModel.findOneAndUpdate(employee_id, body);
   },
+  updateEmployeeStatus: async (req, res) => {
+    try {
+
+      const { employee_id, status } = req.params
+      const allEmployee = await employeeModel.findByIdAndUpdate(employee_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Employee Status Updated Successfully", allEmployee });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(employee_id, body);
+  },
   deleteEmployee: async (req, res) => {
     try {
 

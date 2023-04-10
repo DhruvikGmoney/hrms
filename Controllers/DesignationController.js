@@ -73,6 +73,23 @@ module.exports = {
     }
     // return designationModel.findOneAndUpdate(designation_id, body);
   },
+  updateDesignationStatus: async (req, res) => {
+    try {
+
+      const { designation_id, status } = req.params
+      const allDesignation = await designationModel.findByIdAndUpdate(designation_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Designation Status Updated Successfully", allDesignation });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(designation_id, body);
+  },
   deleteDesignation: async (req, res) => {
     try {
 

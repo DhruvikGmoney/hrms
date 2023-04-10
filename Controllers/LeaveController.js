@@ -66,6 +66,23 @@ module.exports = {
     }
     // return leaveModel.findOneAndUpdate(leave_id, body);
   },
+  updateLeaveStatus: async (req, res) => {
+    try {
+
+      const { leave_id, status } = req.params
+      const allLeave = await leaveModel.findByIdAndUpdate(leave_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Status Updated Successfully", allLeave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(leave_id, body);
+  },
   deleteLeave: async (req, res) => {
     try {
 

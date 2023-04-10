@@ -73,6 +73,23 @@ module.exports = {
     }
     // return departmentModel.findOneAndUpdate(department_id, body);
   },
+  updateDepartmentStatus: async (req, res) => {
+    try {
+
+      const { department_id, status } = req.params
+      const allDepartment = await departmentModel.findByIdAndUpdate(department_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Department Status Updated Successfully", allDepartment });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(department_id, body);
+  },
   deleteDepartment: async (req, res) => {
     try {
 

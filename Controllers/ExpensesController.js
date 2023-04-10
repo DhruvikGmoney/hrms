@@ -67,6 +67,23 @@ module.exports = {
     }
     // return expensesModel.findOneAndUpdate(expenses_id, body);
   },
+  updateExpensesStatus: async (req, res) => {
+    try {
+
+      const { expenses_id, status } = req.params
+      const allExpenses = await expensesModel.findByIdAndUpdate(expenses_id,
+        { $set: { is_active: status } },
+        { upsert: true, new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Status Updated Successfully", allExpenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return attendanceModel.findOneAndUpdate(expenses_id, body);
+  },
   deleteExpenses: async (req, res) => {
     try {
 
