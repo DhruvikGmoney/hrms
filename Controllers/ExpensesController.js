@@ -5,29 +5,23 @@ module.exports = {
     const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
       req.body;
 
-    const user = await expensesModel.findOne({ email: email });
-
-    if (user) {
-      return res.status(400).json({ message: "User already registered" });
-    } else {
-      const userData = new expensesModel({
-        employee_id,
-        is_verified,
-        is_active,
-        modifyed_by,
-        checke_in_out,
+    const expensesData = new expensesModel({
+      employee_id,
+      is_verified,
+      is_active,
+      modifyed_by,
+      checke_in_out,
+    });
+    expensesData
+      .save()
+      .then((data) => {
+        return res
+          .status(201)
+          .json({ message: "Expenses created Successfully", data });
+      })
+      .catch((error) => {
+        return res.status(400).json({ message: error.message, error: error });
       });
-      userData
-        .save()
-        .then((data) => {
-          return res
-            .status(201)
-            .json({ message: "User created Successfully", data });
-        })
-        .catch((error) => {
-          return res.status(400).json({ message: error.message, error: error });
-        });
-    }
   },
   getAllExpenses: () => {
     return expensesModel.find();

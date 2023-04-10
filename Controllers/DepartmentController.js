@@ -5,24 +5,24 @@ module.exports = {
     const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
       req.body;
 
-    const user = await departmentModel.findOne({ email: email });
+    const department = await departmentModel.findOne({ email: email });
 
-    if (user) {
-      return res.status(400).json({ message: "User already registered" });
+    if (department) {
+      return res.status(400).json({ message: "Department already exists" });
     } else {
-      const userData = new departmentModel({
+      const departmentData = new departmentModel({
         employee_id,
         is_verified,
         is_active,
         modifyed_by,
         checke_in_out,
       });
-      userData
+      departmentData
         .save()
         .then((data) => {
           return res
             .status(201)
-            .json({ message: "User created Successfully", data });
+            .json({ message: "Department created Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });

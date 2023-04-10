@@ -52,6 +52,12 @@ const EmployeeSchema = new Schema(
     date_of_birth: { type: Date, trim: true },
     date_of_hire: { type: Date, trim: true },
     salary: { type: Number },
+    health_status: { type: String, trim: true },
+    marital_status: {
+      type: String,
+      enum: ["MARRIED", "UNMARRIED"],
+      default: "UNMARRIED",
+    },
     is_verified: { type: Boolean, default: false },
     is_active: { type: Boolean, default: false },
     last_login: { type: Date, default: Date.now },
