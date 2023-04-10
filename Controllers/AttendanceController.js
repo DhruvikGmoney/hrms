@@ -23,19 +23,39 @@ module.exports = {
         return res.status(400).json({ message: error.message, error: error });
       });
   },
-  getAllAttendance: () => {
-    return attendanceModel.find();
+  getAllAttendance: async (req, res) => {
+
+    const allAttendance = await attendanceModel.find()//.populate("posts");
+
+    return res
+      .status(201)
+      .json({ message: "Attendance created Successfully", allAttendance });
   },
-  getAttendanceById: (attendance_id) => {
-    return attendanceModel.findOne({ attendance_id: attendance_id });
+  getAttendanceById: async (req, res) => {
+    const {attendance_id} =req.params
+    const allAttendance = await attendanceModel.findOne({ attendance_id: attendance_id });
+    return res
+      .status(201)
+      .json({ message: "Attendance created Successfully", allAttendance });
+
     // return attendanceModel.findById(attendance_id);
   },
-  updateAttendance: (attendance_id, body) => {
-    return attendanceModel.updateOne({ attendance_id: attendance_id }, body);
+  updateAttendance: async (req, res) => {
+    const {attendance_id} =req.params
+    const allAttendance = await attendanceModel.updateOne({ attendance_id: attendance_id }, req.body);
+    return res
+      .status(201)
+      .json({ message: "Attendance created Successfully", allAttendance });
+
     // return attendanceModel.findOneAndUpdate(attendance_id, body);
   },
-  deleteAttendance: (attendance_id) => {
-    return attendanceModel.deleteOne({ attendance_id: attendance_id });
+  deleteAttendance: async (req, res) => {
+    const {attendance_id} =req.params
+    const allAttendance = await attendanceModel.deleteOne({ attendance_id: attendance_id });
+    return res
+      .status(201)
+      .json({ message: "Attendance created Successfully", allAttendance });
+
     // return airlineModel.findOneAndDelete(airline_id);
   },
 };
