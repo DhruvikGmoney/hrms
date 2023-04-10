@@ -8,7 +8,11 @@ ExpensesSchema = new Schema(
     purchased_at: { type: Date, required: true },
     purchased_from: { type: String, trim: true },
     quantity: { type: Number, default: 1 },
-    status: { type: String, trim: true },
+    status: {
+      type: String,
+      enum: ["PAID ", "PENDING"],
+      default: "PENDING",
+    },
     description: { type: String, trim: true },
     department_id: { type: Schema.Types.ObjectId, ref: "department" },
     is_verified: { type: Boolean, default: false },

@@ -13,7 +13,11 @@ const LeaveSchema = new Schema(
     start_date: { type: Date, required: true },
     end_date: { type: Date, required: true },
     description: { type: String, trim: true },
-    status: { type: Date, required: true, trim: true },
+    status: {
+      type: String,
+      enum: ["APPROVED ", "PENDING"],
+      default: "PENDING",
+    },
     is_verified: { type: Boolean, default: false },
     is_active: { type: Boolean, default: false },
     is_approved: { type: Boolean, default: false },

@@ -17,7 +17,7 @@ module.exports = {
       .then((data) => {
         return res
           .status(201)
-          .json({ status: true, message: "Attendance created Successfully", data });
+          .json({ status: true, message: "Attendance Created Successfully", data });
       })
       .catch((error) => {
         return res.status(400).json({ message: error.message, error: error });

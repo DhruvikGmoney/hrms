@@ -12,7 +12,8 @@ const AttendanceSchema = new Schema(
     is_verified: { type: Boolean, default: false },
     is_active: { type: Boolean, default: false },
     modifyed_by: { type: Schema.Types.ObjectId, ref: "employee" },
-    checke_in_out: { type: String },
+    checke_in: { type: Date },
+    checke_out: { type: Date },
   },
   { versionKey: false, timestamps: true }
 );

@@ -52,8 +52,8 @@ const EmployeeSchema = new Schema(
     manager_id: { type: Schema.Types.ObjectId, ref: "employee" },
     job_id: { type: String, trim: true },
     shift: { type: String, enum: ["DAY", "NIGHT"], default: "Day" },
-    date_of_birth: { type: Date, trim: true },
-    date_of_hire: { type: Date, trim: true },
+    date_of_birth: { type: Date },
+    date_of_hire: { type: Date },
     salary: { type: Number },
     health_status: { type: String, trim: true },
     marital_status: {
