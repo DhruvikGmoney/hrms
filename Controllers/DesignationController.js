@@ -8,7 +8,7 @@ module.exports = {
     const designation = await designationModel.findOne({ email: email });
 
     if (designation) {
-      return res.status(400).json({ message: "Designation already exists" });
+      return res.status(400).json({ status: true, message: "Designation already exists" });
     } else {
       const designationData = new designationModel({
         employee_id,
@@ -22,26 +22,70 @@ module.exports = {
         .then((data) => {
           return res
             .status(201)
-            .json({ message: "Designation created Successfully", data });
+            .json({ status: true, message: "Designation Created Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });
         });
     }
   },
-  getAllDesignation: () => {
-    return designationModel.find();
+  getAllDesignation: async (req, res) => {
+    try {
+
+      const allDesignation = await designationModel.find()//.populate("posts");
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Designation Get Successfully", allDesignation });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
-  getDesignationById: (designation_id) => {
-    return designationModel.findOne({ designation_id: designation_id });
+  getDesignationById: async (req, res) => {
+    try {
+
+      const { designation_id } = req.params
+      const allDesignation = await designationModel.findOne({ designation_id: designation_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Designation Get Successfully", allDesignation });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
     // return designationModel.findById(designation_id);
   },
-  updateDesignation: (designation_id, body) => {
-    return designationModel.updateOne({ designation_id: designation_id }, body);
+  updateDesignation: async (req, res) => {
+    try {
+
+      const { designation_id } = req.params
+      const allDesignation = await designationModel.updateOne({ designation_id: designation_id }, req.body);
+      return res
+        .status(200)
+        .json({ status: true, message: "Designation Updated Successfully", allDesignation });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
     // return designationModel.findOneAndUpdate(designation_id, body);
   },
-  deleteDesignation: (designation_id) => {
-    return designationModel.deleteOne({ designation_id: designation_id });
-    // return designationModel.findOneAndDelete(designation_id);
+  deleteDesignation: async (req, res) => {
+    try {
+
+      const { designation_id } = req.params
+      const allDesignation = await designationModel.deleteOne({ designation_id: designation_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Designation Deleted Successfully", allDesignation });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

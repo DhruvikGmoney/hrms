@@ -17,25 +17,69 @@ module.exports = {
       .then((data) => {
         return res
           .status(201)
-          .json({ message: "Expenses created Successfully", data });
+          .json({ status: true, message: "Expenses Created Successfully", data });
       })
       .catch((error) => {
         return res.status(400).json({ message: error.message, error: error });
       });
   },
-  getAllExpenses: () => {
-    return expensesModel.find();
+  getAllExpenses: async (req, res) => {
+    try {
+
+      const allExpenses = await expensesModel.find()//.populate("posts");
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Get Successfully", allExpenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
-  getExpensesById: (expenses_id) => {
-    return expensesModel.findOne({ expenses_id: expenses_id });
+  getExpensesById: async (req, res) => {
+    try {
+
+      const { expenses_id } = req.params
+      const allExpenses = await expensesModel.findOne({ expenses_id: expenses_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Get Successfully", allExpenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
     // return expensesModel.findById(expenses_id);
   },
-  updateExpenses: (expenses_id, body) => {
-    // return airlineModel.updateOne({ expenses_id: expenses_id }, body);
-    return expensesModel.findOneAndUpdate(expenses_id, body);
+  updateExpenses: async (req, res) => {
+    try {
+
+      const { expenses_id } = req.params
+      const allExpenses = await expensesModel.updateOne({ expenses_id: expenses_id }, req.body);
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Updated Successfully", allExpenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return expensesModel.findOneAndUpdate(expenses_id, body);
   },
-  deleteExpenses: (expenses_id) => {
-    // return airlineModel.deleteOne({ expenses_id: expenses_id });
-    return expensesModel.findOneAndDelete(expenses_id);
+  deleteExpenses: async (req, res) => {
+    try {
+
+      const { expenses_id } = req.params
+      const allExpenses = await expensesModel.deleteOne({ expenses_id: expenses_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Deleted Successfully", allExpenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

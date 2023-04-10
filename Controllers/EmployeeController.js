@@ -22,26 +22,70 @@ module.exports = {
         .then((data) => {
           return res
             .status(201)
-            .json({ message: "User created Successfully", data });
+            .json({ message: "User Created Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });
         });
     }
   },
-  getAllEmployee: () => {
-    return employeeModel.find();
+  getAllEmployee: async (req, res) => {
+    try {
+
+      const allEmployee = await employeeModel.find()//.populate("posts");
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Employee Get Successfully", allEmployee });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
-  getEmployeeById: (employee_id) => {
-    return employeeModel.findOne({ employee_id: employee_id });
+  getEmployeeById: async (req, res) => {
+    try {
+
+      const { employee_id } = req.params
+      const allEmployee = await employeeModel.findOne({ employee_id: employee_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Employee Get Successfully", allEmployee });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
     // return employeeModel.findById(employee_id);
   },
-  updateEmployee: (employee_id, data) => {
-    return airlineModel.updateOne({ employee_id: employee_id }, body);
-    // return employeeModel.findOneAndUpdate(employee_id, data);
+  updateEmployee: async (req, res) => {
+    try {
+
+      const { employee_id } = req.params
+      const allEmployee = await employeeModel.updateOne({ employee_id: employee_id }, req.body);
+      return res
+        .status(200)
+        .json({ status: true, message: "Employee Updated Successfully", allEmployee });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return employeeModel.findOneAndUpdate(employee_id, body);
   },
-  deleteEmployee: (employee_id) => {
-    return employeeModel.deleteOne({ employee_id: employee_id });
-    // return employeeModel.findOneAndDelete(employee_id);
+  deleteEmployee: async (req, res) => {
+    try {
+
+      const { employee_id } = req.params
+      const allEmployee = await employeeModel.deleteOne({ employee_id: employee_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Employee Deleted Successfully", allEmployee });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

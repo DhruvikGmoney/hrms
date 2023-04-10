@@ -8,7 +8,7 @@ module.exports = {
     const department = await departmentModel.findOne({ email: email });
 
     if (department) {
-      return res.status(400).json({ message: "Department already exists" });
+      return res.status(400).json({ status: true, message: "Department already exists" });
     } else {
       const departmentData = new departmentModel({
         employee_id,
@@ -22,26 +22,70 @@ module.exports = {
         .then((data) => {
           return res
             .status(201)
-            .json({ message: "Department created Successfully", data });
+            .json({ status: true, message: "Department Created Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });
         });
     }
   },
-  getAllDepartment: () => {
-    return departmentModel.find();
+  getAllDepartment: async (req, res) => {
+    try {
+
+      const allDepartment = await departmentModel.find()//.populate("posts");
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Department Get Successfully", allDepartment });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
-  getDepartmentById: (department_id) => {
-    return departmentModel.findOne({ department_id: department_id });
+  getDepartmentById: async (req, res) => {
+    try {
+
+      const { department_id } = req.params
+      const allDepartment = await departmentModel.findOne({ department_id: department_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Department Get Successfully", allDepartment });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
     // return departmentModel.findById(department_id);
   },
-  updateDepartment: (department_id, body) => {
-    return departmentModel.findOneAndUpdate(department_id, body);
-    // return airlineModel.updateOne({ department_id: department_id }, body);
+  updateDepartment: async (req, res) => {
+    try {
+
+      const { department_id } = req.params
+      const allDepartment = await departmentModel.updateOne({ department_id: department_id }, req.body);
+      return res
+        .status(200)
+        .json({ status: true, message: "Department Updated Successfully", allDepartment });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return departmentModel.findOneAndUpdate(department_id, body);
   },
-  deleteDepartment: (department_id) => {
-    return departmentModel.findOneAndDelete(department_id);
-    // return airlineModel.deleteOne({ department_id: department_id });
+  deleteDepartment: async (req, res) => {
+    try {
+
+      const { department_id } = req.params
+      const allDepartment = await departmentModel.deleteOne({ department_id: department_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Department Deleted Successfully", allDepartment });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

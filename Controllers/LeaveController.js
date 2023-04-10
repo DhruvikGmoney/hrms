@@ -17,25 +17,68 @@ module.exports = {
       .then((data) => {
         return res
           .status(201)
-          .json({ message: "Leave created Successfully", data });
+          .json({ status: true, message: "Leave Created Successfully", data });
       })
       .catch((error) => {
         return res.status(400).json({ message: error.message, error: error });
       });
   },
-  getAllLeave: () => {
-    return leaveModel.find();
+  getAllLeave: async (req, res) => {
+    try {
+      const allLeave = await leaveModel.find()//.populate("posts");
+
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Get Successfully", allLeave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
-  getLeaveById: (leave_id) => {
-    return leaveModel.findOne({ leave_id: leave_id });
-    // return leaveModel.findOne(leave_id);
+  getLeaveById: async (req, res) => {
+    try {
+
+      const { leave_id } = req.params
+      const allLeave = await leaveModel.findOne({ leave_id: leave_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Get Successfully", allLeave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return leaveModel.findById(leave_id);
   },
-  updateLeave: (leave_id, data) => {
-    return leaveModel.findOneAndUpdate(leave_id, data);
-    // return airlineModel.updateOne({ leave_id: leave_id }, body);
+  updateLeave: async (req, res) => {
+    try {
+
+      const { leave_id } = req.params
+      const allLeave = await leaveModel.updateOne({ leave_id: leave_id }, req.body);
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Updated Successfully", allLeave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return leaveModel.findOneAndUpdate(leave_id, body);
   },
-  deleteLeave: (leave_id) => {
-    return leaveModel.findOneAndDelete(leave_id);
-    // return leaveModel.deleteOne({ leave_id: leave_id });
+  deleteLeave: async (req, res) => {
+    try {
+
+      const { leave_id } = req.params
+      const allLeave = await leaveModel.deleteOne({ leave_id: leave_id });
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Deleted Successfully", allLeave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+    // return airlineModel.findOneAndDelete(airline_id);
   },
 };
