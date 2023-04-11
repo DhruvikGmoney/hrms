@@ -1,8 +1,7 @@
+const { jwt_key } = require("../Config/Config");
 const employeeModel = require("../Models/EmployeeModel");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const dotenv = require("dotenv");
-dotenv.config();
 
 module.exports = {
   register: async (req, res) => {
@@ -11,7 +10,6 @@ module.exports = {
       first_name,
       middle_name,
       last_name,
-      full_name,
       address,
       pincode,
       country,
@@ -46,7 +44,7 @@ module.exports = {
         first_name,
         middle_name,
         last_name,
-        full_name,
+        full_name: first_name + " " + middle_name + " " + last_name,
         address,
         pincode,
         country,
@@ -97,7 +95,7 @@ module.exports = {
     if (user.email == email && bcrypt.compare(password, user.password)) {
       let token = jsonwebtoken.sign(
         { id: user._id, email: email, role: user.role },
-        process.env.JWT_SECRET_KEY,
+        jwt_key,
         { expiresIn: "10h" }
       );
       return res.status(200).json({ email, token });

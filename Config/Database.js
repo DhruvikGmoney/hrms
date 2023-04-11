@@ -1,43 +1,46 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv").config();
-const EmployeeModel = require("../Models/EmployeeModel");
+const { mongo_uri } = require("../Config/Config");
+const employeeModel = require("../Models/EmployeeModel");
 const bcrypt = require("bcryptjs");
 
 module.exports = function () {
   mongoose.set("strictQuery", false);
-  //mongodb://127.0.0.1:27017/hrms
-  mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+  mongoose.connect(mongo_uri, { useNewUrlParser: true });
 
   mongoose.connection.on("connected", async () => {
     console.log("Database Successfully Connected");
-    EmployeeModel.findOne({ role: "SUPER_ADMIN" }, async function (err, data) {
-      console.log(data);
+    employeeModel.findOne({ role: "SUPER_ADMIN" }, async function (err, data) {
       if (!data) {
         const salt = await bcrypt.genSalt(10);
         const password = await bcrypt.hash("superadmin", salt);
-        await EmployeeModel.create(
-          {
-            email: "superadmin@gmail.com",
-            password: password,
-            is_verified: true,
-            is_active: true,
-            role: "SUPER_ADMIN",
-            first_name: "super",
-            last_name: "admin",
-            phone: "9876543210",
-            city: "Surat",
-            state: "Gujarat",
-            country: "India",
-            address: "Yogi Chowk",
+        const userData = new employeeModel({
+          email: "superadmin@gmail.com",
+          password: password,
+          is_verified: true,
+          is_active: true,
+          role: "SUPER_ADMIN",
+          first_name: "super",
+          last_name: "admin",
+          full_name: "super admin",
+          phone: "9876543210",
+          address: {
+            address: "250",
             pincode: "395006",
-            health_status: "Good",
+            country: "India",
+            state: "Gujarat",
+            city: "Surat",
           },
-          (e, adminData) => {
+          health_status: "Good",
+        });
+        userData
+          .save()
+          .then((adminData) => {
             console.log(
-              `Admin User Created Successfully with Email "superadmin@gmail.com" And id ${adminData}`
+              `Admin User Created Successfully with Email "superadmin@gmail.com" And id ${adminData._id}`
             );
-          }
-        );
+          }).catch((error) => {
+            console.log(error.message);
+          });
       }
     });
   });
