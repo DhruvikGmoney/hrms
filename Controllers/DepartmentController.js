@@ -2,7 +2,7 @@ const departmentModel = require("../Models/DepartmentModel");
 
 module.exports = {
   addDepartment: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
+    const { manager_id, description, is_verified, is_active, modifyed_by } =
       req.body;
 
     const department = await departmentModel.findOne({ email: email });
@@ -11,11 +11,11 @@ module.exports = {
       return res.status(400).json({ status: true, message: "Department already exists" });
     } else {
       const departmentData = new departmentModel({
-        employee_id,
+        manager_id,
+        description,
         is_verified,
         is_active,
         modifyed_by,
-        checke_in_out,
       });
       departmentData
         .save()

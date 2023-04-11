@@ -1,14 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const employeeController = require("../Controllers/EmployeeController");
+const EmployeeController = require("../Controllers/EmployeeController");
 
-router.post("/addEmployee", employeeController.addEmployee);
-router.get("/getAllEmployee", employeeController.getAllEmployee);
-router.get("/getEmployeeById/:employee_id", employeeController.getEmployeeById); // Path Variables
-router.put("/updateEmployee/:employee_id", employeeController.updateEmployee); // Path Variables
-router.delete(
-  "/deleteEmployee/:employee_id",
-  employeeController.deleteEmployee
-); // Path Variables
+router.post("/addEmployee", EmployeeController.addEmployee);
+router.get("/getAllEmployee", EmployeeController.getAllEmployee);
+router.get("/getEmployeeById/:employee_id", EmployeeController.getEmployeeById);
+router.put("/updateEmployee/:employee_id", EmployeeController.updateEmployee);
+router.put("/updateEmployeeStatus/:employee_id/:status", EmployeeController.updateEmployeeStatus);
+router.delete("/deleteEmployee/:employee_id", EmployeeController.deleteEmployee);
 
 module.exports = router;

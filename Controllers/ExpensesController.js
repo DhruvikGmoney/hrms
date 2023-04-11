@@ -2,15 +2,31 @@ const expensesModel = require("../Models/ExpensesModel");
 
 module.exports = {
   addExpenses: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
+    const { amount,
+      purchased_at,
+      purchased_from,
+      quantity,
+      status,
+      description,
+      department_id,
+      is_verified,
+      is_active,
+      is_approved,
+      modifyed_by, } =
       req.body;
 
     const expensesData = new expensesModel({
-      employee_id,
+      amount,
+      purchased_at,
+      purchased_from,
+      quantity,
+      status,
+      description,
+      department_id,
       is_verified,
       is_active,
+      is_approved,
       modifyed_by,
-      checke_in_out,
     });
     expensesData
       .save()

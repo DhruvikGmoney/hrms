@@ -2,7 +2,7 @@ const designationModel = require("../Models/DesignationModel");
 
 module.exports = {
   addDesignation: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
+    const { designation_name, description, is_verified, is_active, modifyed_by } =
       req.body;
 
     const designation = await designationModel.findOne({ email: email });
@@ -11,11 +11,12 @@ module.exports = {
       return res.status(400).json({ status: true, message: "Designation already exists" });
     } else {
       const designationData = new designationModel({
-        employee_id,
+        designation_name,
+        description,
         is_verified,
         is_active,
         modifyed_by,
-        checke_in_out,
+
       });
       designationData
         .save()

@@ -12,17 +12,9 @@ const Role = require("../Helpers/role");
 
 router.post("/addAttendance", AttendanceController.addAttendance);
 router.get("/getAllAttendance", AttendanceController.getAllAttendance);
-router.get(
-  "/getAttendanceById/:attendance_id",
-  AttendanceController.getAttendanceById
-);
-router.put(
-  "/updateAttendance?:attendance_id",
-  AttendanceController.updateAttendance
-);
-router.delete(
-  "/deleteAttendance/:attendance_id",
-  AttendanceController.deleteAttendance
-);
+router.get("/getAttendanceById/:attendance_id", AttendanceController.getAttendanceById);
+router.put("/updateAttendance/:attendance_id", AttendanceController.updateAttendance);
+router.put("/updateAttendanceStatus/:attendance_id/:status", AttendanceController.updateAttendanceStatus);
+router.delete("/deleteAttendance/:attendance_id", AttendanceController.deleteAttendance);
 
 module.exports = router;

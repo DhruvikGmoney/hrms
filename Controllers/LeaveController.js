@@ -2,15 +2,31 @@ const leaveModel = require("../Models/LeaveModel");
 
 module.exports = {
   addLeave: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
+    const { employee_id,
+      type,
+      start_date,
+      end_date,
+      description,
+      status,
+      is_verified,
+      is_active,
+      is_approved,
+      approved_by,
+      modifyed_by, } =
       req.body;
 
     const leaveData = new leaveModel({
       employee_id,
+      type,
+      start_date,
+      end_date,
+      description,
+      status,
       is_verified,
       is_active,
+      is_approved,
+      approved_by,
       modifyed_by,
-      checke_in_out,
     });
     leaveData
       .save()
