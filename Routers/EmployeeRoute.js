@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const authorize = require('../middleware/auth');
+const Role = require("../Helpers/role");
 const EmployeeController = require("../Controllers/EmployeeController");
 
-router.post("/addEmployee", EmployeeController.addEmployee);
-router.get("/getAllEmployee", EmployeeController.getAllEmployee);
+router.post("/addEmployee", authorize([Role.ADMIN, Role.SUPER_ADMIN]), EmployeeController.addEmployee);
+router.get("/getAllEmployee", authorize(), EmployeeController.getAllEmployee);
 router.get("/getEmployeeById/:employee_id", EmployeeController.getEmployeeById);
 router.put("/updateEmployee/:employee_id", EmployeeController.updateEmployee);
 router.put("/updateEmployeeStatus/:employee_id/:status", EmployeeController.updateEmployeeStatus);

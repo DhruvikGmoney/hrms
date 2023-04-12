@@ -47,7 +47,7 @@ module.exports = {
     try {
 
       const { employee_id } = req.params
-      const allEmployee = await employeeModel.findOne({ employee_id: employee_id });
+      const allEmployee = await employeeModel.findById({ _id: employee_id });
       return res
         .status(200)
         .json({ status: true, message: "Employee Get Successfully", allEmployee });
@@ -56,7 +56,6 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return employeeModel.findById(employee_id);
   },
   updateEmployee: async (req, res) => {
     try {

@@ -48,7 +48,7 @@ module.exports = {
     try {
 
       const { designation_id } = req.params
-      const allDesignation = await designationModel.findOne({ designation_id: designation_id });
+      const allDesignation = await designationModel.findById({ _id: designation_id });
       return res
         .status(200)
         .json({ status: true, message: "Designation Get Successfully", allDesignation });
@@ -57,7 +57,6 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return designationModel.findById(designation_id);
   },
   updateDesignation: async (req, res) => {
     try {

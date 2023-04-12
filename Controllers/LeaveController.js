@@ -56,7 +56,7 @@ module.exports = {
     try {
 
       const { leave_id } = req.params
-      const allLeave = await leaveModel.findOne({ leave_id: leave_id });
+      const allLeave = await leaveModel.findById({ _id: leave_id });
       return res
         .status(200)
         .json({ status: true, message: "Leave Get Successfully", allLeave });
@@ -65,7 +65,6 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return leaveModel.findById(leave_id);
   },
   updateLeave: async (req, res) => {
     try {

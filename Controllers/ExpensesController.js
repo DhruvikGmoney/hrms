@@ -57,7 +57,7 @@ module.exports = {
     try {
 
       const { expenses_id } = req.params
-      const allExpenses = await expensesModel.findOne({ expenses_id: expenses_id });
+      const allExpenses = await expensesModel.findById({ _id: expenses_id });
       return res
         .status(200)
         .json({ status: true, message: "Expenses Get Successfully", allExpenses });
@@ -66,7 +66,6 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return expensesModel.findById(expenses_id);
   },
   updateExpenses: async (req, res) => {
     try {

@@ -95,8 +95,9 @@ module.exports = {
     if (user.email == email && bcrypt.compare(password, user.password)) {
       let token = jsonwebtoken.sign(
         { id: user._id, email: email, role: user.role },
-        jwt_key,
-        { expiresIn: "10h" }
+        jwt_key, {
+        expiresIn: '12h'
+      }
       );
       return res.status(200).json({ email, token });
     } else {

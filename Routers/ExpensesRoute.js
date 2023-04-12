@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const authorize = require('../middleware/auth');
+const Role = require("../Helpers/role");
 const ExpensesController = require("../Controllers/ExpensesController");
 
-router.post("/addExpenses", ExpensesController.addExpenses);
-router.get("/getAllExpenses", ExpensesController.getAllExpenses);
+router.post("/addExpenses", authorize([Role.ADMIN, Role.SUPER_ADMIN]), ExpensesController.addExpenses);
+router.get("/getAllExpenses", authorize(), ExpensesController.getAllExpenses);
 router.get("/getExpensesById/:expenses_id", ExpensesController.getExpensesById);
 router.put("/updateExpenses/:expenses_id", ExpensesController.updateExpenses);
 router.put("/updateExpensesStatus/:expenses_id/:status", ExpensesController.updateExpensesStatus);
