@@ -29,8 +29,8 @@ module.exports = {
       is_verified,
       is_active,
       last_login,
-      modifyed_by,
-    } = req.body;
+      modifyed_by, } = req.body;
+
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(req.body.password, salt);
 

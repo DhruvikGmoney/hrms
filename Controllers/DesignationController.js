@@ -2,8 +2,7 @@ const designationModel = require("../Models/DesignationModel");
 
 module.exports = {
   addDesignation: async (req, res) => {
-    const { designation_name, description, is_verified, is_active, modifyed_by } =
-      req.body;
+    const { designation_name, description, is_verified, is_active, modifyed_by } = req.body;
 
     const designation = await designationModel.findOne({ email: email });
 
@@ -32,7 +31,6 @@ module.exports = {
   },
   getAllDesignation: async (req, res) => {
     try {
-
       const allDesignation = await designationModel.find()
       if (allDesignation.length == 0) {
         return res
@@ -50,7 +48,6 @@ module.exports = {
   },
   getDesignationById: async (req, res) => {
     try {
-
       const { designation_id } = req.params
       const designation = await designationModel.findById({ _id: designation_id });
       if (designation == null) {
@@ -69,7 +66,6 @@ module.exports = {
   },
   updateDesignation: async (req, res) => {
     try {
-
       const { designation_id } = req.params
       const designation = await designationModel.findByIdAndUpdate({ _id: designation_id }, req.body, { new: true });
       if (designation == null) {
@@ -88,7 +84,6 @@ module.exports = {
   },
   updateDesignationStatus: async (req, res) => {
     try {
-
       const { designation_id, status } = req.params
       const designation = await designationModel.findByIdAndUpdate(designation_id,
         { $set: { is_active: status } },
@@ -109,7 +104,6 @@ module.exports = {
   },
   deleteDesignation: async (req, res) => {
     try {
-
       const { designation_id } = req.params
       const designation = await designationModel.findByIdAndDelete({ _id: designation_id });
       if (designation == null) {

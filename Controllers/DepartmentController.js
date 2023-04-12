@@ -2,8 +2,7 @@ const departmentModel = require("../Models/DepartmentModel");
 
 module.exports = {
   addDepartment: async (req, res) => {
-    const { manager_id, description, is_verified, is_active, modifyed_by } =
-      req.body;
+    const { manager_id, description, is_verified, is_active, modifyed_by } = req.body;
 
     const department = await departmentModel.findOne({ email: email });
 
@@ -31,7 +30,6 @@ module.exports = {
   },
   getAllDepartment: async (req, res) => {
     try {
-
       const department = await departmentModel.find()
       if (department.length == 0) {
         return res
@@ -49,7 +47,6 @@ module.exports = {
   },
   getDepartmentById: async (req, res) => {
     try {
-
       const { department_id } = req.params
       const department = await departmentModel.findById({ _id: department_id });
       if (department == null) {
@@ -68,7 +65,6 @@ module.exports = {
   },
   updateDepartment: async (req, res) => {
     try {
-
       const { department_id } = req.params
       const department = await departmentModel.findByIdAndUpdate({ _id: department_id }, req.body, { new: true });
       if (department == null) {
@@ -87,7 +83,6 @@ module.exports = {
   },
   updateDepartmentStatus: async (req, res) => {
     try {
-
       const { department_id, status } = req.params
       const department = await departmentModel.findByIdAndUpdate(department_id,
         { $set: { is_active: status } },
@@ -108,7 +103,6 @@ module.exports = {
   },
   deleteDepartment: async (req, res) => {
     try {
-
       const { department_id } = req.params
       const department = await departmentModel.findByIdAndDelete({ _id: department_id });
       if (department == null) {

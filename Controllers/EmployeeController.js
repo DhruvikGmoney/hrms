@@ -2,8 +2,7 @@ const employeeModel = require("../Models/EmployeeModel");
 
 module.exports = {
   addEmployee: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } =
-      req.body;
+    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } = req.body;
 
     const user = await employeeModel.findOne({ email: email });
 
@@ -31,7 +30,6 @@ module.exports = {
   },
   getAllEmployee: async (req, res) => {
     try {
-
       const allEmployee = await employeeModel.find()
       if (allEmployee.length == 0) {
         return res
@@ -49,7 +47,6 @@ module.exports = {
   },
   getEmployeeById: async (req, res) => {
     try {
-
       const { employee_id } = req.params
       const employee = await employeeModel.findById({ _id: employee_id });
       if (employee == null) {
@@ -68,7 +65,6 @@ module.exports = {
   },
   updateEmployee: async (req, res) => {
     try {
-
       const { employee_id } = req.params
       const employee = await employeeModel.findByIdAndUpdate({ _id: employee_id }, req.body, { new: true });
       if (employee == null) {
@@ -87,7 +83,6 @@ module.exports = {
   },
   updateEmployeeStatus: async (req, res) => {
     try {
-
       const { employee_id, status } = req.params
       const employee = await employeeModel.findByIdAndUpdate(employee_id,
         { $set: { is_active: status } },
@@ -108,7 +103,6 @@ module.exports = {
   },
   deleteEmployee: async (req, res) => {
     try {
-
       const { employee_id } = req.params
       const employee = await employeeModel.findByIdAndDelete({ _id: employee_id });
       if (employee == null) {

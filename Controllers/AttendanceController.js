@@ -2,8 +2,7 @@ const attendanceModel = require("../Models/AttendanceModel");
 
 module.exports = {
   addAttendance: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in, checke_out } =
-      req.body;
+    const { employee_id, is_verified, is_active, modifyed_by, checke_in, checke_out } = req.body;
 
     const attendanceData = new attendanceModel({
       employee_id,
@@ -43,7 +42,6 @@ module.exports = {
   },
   getAttendanceById: async (req, res) => {
     try {
-
       const { attendance_id } = req.params
       const attendance = await attendanceModel.findById({ _id: attendance_id }).populate({ path: 'employee_id', select: 'role' });;
       if (attendance == null) {
@@ -62,7 +60,6 @@ module.exports = {
   },
   updateAttendance: async (req, res) => {
     try {
-
       const { attendance_id } = req.params
       const attendance = await attendanceModel.findByIdAndUpdate({ _id: attendance_id }, req.body, { new: true });
       if (attendance == null) {
@@ -81,7 +78,6 @@ module.exports = {
   },
   updateAttendanceStatus: async (req, res) => {
     try {
-
       const { attendance_id, status } = req.params
       const attendance = await attendanceModel.findByIdAndUpdate(attendance_id,
         { $set: { is_active: status } },
@@ -102,7 +98,6 @@ module.exports = {
   },
   deleteAttendance: async (req, res) => {
     try {
-
       const { attendance_id } = req.params
       const attendance = await attendanceModel.findByIdAndDelete({ _id: attendance_id });
       if (attendance == null) {

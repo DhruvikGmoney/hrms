@@ -2,7 +2,8 @@ const expensesModel = require("../Models/ExpensesModel");
 
 module.exports = {
   addExpenses: async (req, res) => {
-    const { amount,
+    const {
+      amount,
       purchased_at,
       purchased_from,
       quantity,
@@ -12,8 +13,7 @@ module.exports = {
       is_verified,
       is_active,
       is_approved,
-      modifyed_by, } =
-      req.body;
+      modifyed_by, } = req.body;
 
     const expensesData = new expensesModel({
       amount,
@@ -41,7 +41,6 @@ module.exports = {
   },
   getAllExpenses: async (req, res) => {
     try {
-
       const allExpenses = await expensesModel.find()
       if (allExpenses.length == 0) {
         return res
@@ -59,7 +58,6 @@ module.exports = {
   },
   getExpensesById: async (req, res) => {
     try {
-
       const { expenses_id } = req.params
       const expenses = await expensesModel.findById({ _id: expenses_id });
       if (expenses == null) {
@@ -78,7 +76,6 @@ module.exports = {
   },
   updateExpenses: async (req, res) => {
     try {
-
       const { expenses_id } = req.params
       const expenses = await expensesModel.findByIdAndUpdate({ _id: expenses_id }, req.body, { new: true });
       if (expenses == null) {
@@ -97,7 +94,6 @@ module.exports = {
   },
   updateExpensesStatus: async (req, res) => {
     try {
-
       const { expenses_id, status } = req.params
       const expenses = await expensesModel.findByIdAndUpdate(expenses_id,
         { $set: { is_active: status } },
@@ -118,7 +114,6 @@ module.exports = {
   },
   deleteExpenses: async (req, res) => {
     try {
-
       const { expenses_id } = req.params
       const expenses = await expensesModel.findByIdAndDelete({ _id: expenses_id });
       if (expenses == null) {
