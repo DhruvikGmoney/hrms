@@ -32,8 +32,12 @@ module.exports = {
   getAllDepartment: async (req, res) => {
     try {
 
-      const department = await departmentModel.find()//.populate("posts");
-
+      const department = await departmentModel.find()
+      if (department.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Department Not Found In Database` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Department Get Successfully", department });
@@ -48,6 +52,11 @@ module.exports = {
 
       const { department_id } = req.params
       const department = await departmentModel.findById({ _id: department_id });
+      if (department == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Department Not Found With ID :- ${department_id} ` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Department Get Successfully", department });
@@ -61,7 +70,12 @@ module.exports = {
     try {
 
       const { department_id } = req.params
-      const department = await departmentModel.updateOne({ department_id: department_id }, req.body);
+      const department = await departmentModel.findByIdAndUpdate({ _id: department_id }, req.body, { new: true });
+      if (department == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Department Not Found With ID :- ${department_id} ` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Department Updated Successfully", department });
@@ -70,7 +84,6 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return departmentModel.findOneAndUpdate(department_id, body);
   },
   updateDepartmentStatus: async (req, res) => {
     try {
@@ -78,7 +91,12 @@ module.exports = {
       const { department_id, status } = req.params
       const department = await departmentModel.findByIdAndUpdate(department_id,
         { $set: { is_active: status } },
-        { upsert: true, new: true });
+        { new: true });
+      if (department == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Department Not Found With ID :- ${department_id} ` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Department Status Updated Successfully", department });
@@ -87,13 +105,17 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return attendanceModel.findOneAndUpdate(department_id, body);
   },
   deleteDepartment: async (req, res) => {
     try {
 
       const { department_id } = req.params
-      const department = await departmentModel.deleteOne({ department_id: department_id });
+      const department = await departmentModel.findByIdAndDelete({ _id: department_id });
+      if (department == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Department Not Found With ID :- ${department_id} ` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Department Deleted Successfully", department });
@@ -102,6 +124,5 @@ module.exports = {
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

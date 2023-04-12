@@ -33,8 +33,12 @@ module.exports = {
   getAllDesignation: async (req, res) => {
     try {
 
-      const allDesignation = await designationModel.find()//.populate("posts");
-
+      const allDesignation = await designationModel.find()
+      if (allDesignation.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Designation Not Found In Database` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Designation Get Successfully", allDesignation });
@@ -48,10 +52,15 @@ module.exports = {
     try {
 
       const { designation_id } = req.params
-      const allDesignation = await designationModel.findById({ _id: designation_id });
+      const designation = await designationModel.findById({ _id: designation_id });
+      if (designation == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Designation Not Found With ID :- ${designation_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Designation Get Successfully", allDesignation });
+        .json({ status: true, message: "Designation Get Successfully", designation });
     } catch (err) {
       return res
         .status(500)
@@ -62,47 +71,59 @@ module.exports = {
     try {
 
       const { designation_id } = req.params
-      const allDesignation = await designationModel.updateOne({ designation_id: designation_id }, req.body);
+      const designation = await designationModel.findByIdAndUpdate({ _id: designation_id }, req.body, { new: true });
+      if (designation == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Designation Not Found With ID :- ${designation_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Designation Updated Successfully", allDesignation });
+        .json({ status: true, message: "Designation Updated Successfully", designation });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return designationModel.findOneAndUpdate(designation_id, body);
   },
   updateDesignationStatus: async (req, res) => {
     try {
 
       const { designation_id, status } = req.params
-      const allDesignation = await designationModel.findByIdAndUpdate(designation_id,
+      const designation = await designationModel.findByIdAndUpdate(designation_id,
         { $set: { is_active: status } },
-        { upsert: true, new: true });
+        { new: true });
+      if (designation == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Designation Not Found With ID :- ${designation_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Designation Status Updated Successfully", allDesignation });
+        .json({ status: true, message: "Designation Status Updated Successfully", designation });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return attendanceModel.findOneAndUpdate(designation_id, body);
   },
   deleteDesignation: async (req, res) => {
     try {
 
       const { designation_id } = req.params
-      const allDesignation = await designationModel.deleteOne({ designation_id: designation_id });
+      const designation = await designationModel.findByIdAndDelete({ _id: designation_id });
+      if (designation == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Designation Not Found With ID :- ${designation_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Designation Deleted Successfully", allDesignation });
+        .json({ status: true, message: "Designation Deleted Successfully", designation });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

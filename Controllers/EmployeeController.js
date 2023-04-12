@@ -32,8 +32,12 @@ module.exports = {
   getAllEmployee: async (req, res) => {
     try {
 
-      const allEmployee = await employeeModel.find()//.populate("posts");
-
+      const allEmployee = await employeeModel.find()
+      if (allEmployee.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Employee Not Found In Database` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Employee Get Successfully", allEmployee });
@@ -47,10 +51,15 @@ module.exports = {
     try {
 
       const { employee_id } = req.params
-      const allEmployee = await employeeModel.findById({ _id: employee_id });
+      const employee = await employeeModel.findById({ _id: employee_id });
+      if (employee == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Employee Not Found With ID :- ${employee_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Employee Get Successfully", allEmployee });
+        .json({ status: true, message: "Employee Get Successfully", employee });
     } catch (err) {
       return res
         .status(500)
@@ -61,47 +70,59 @@ module.exports = {
     try {
 
       const { employee_id } = req.params
-      const allEmployee = await employeeModel.updateOne({ employee_id: employee_id }, req.body);
+      const employee = await employeeModel.findByIdAndUpdate({ _id: employee_id }, req.body, { new: true });
+      if (employee == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Employee Not Found With ID :- ${employee_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Employee Updated Successfully", allEmployee });
+        .json({ status: true, message: "Employee Updated Successfully", employee });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return employeeModel.findOneAndUpdate(employee_id, body);
   },
   updateEmployeeStatus: async (req, res) => {
     try {
 
       const { employee_id, status } = req.params
-      const allEmployee = await employeeModel.findByIdAndUpdate(employee_id,
+      const employee = await employeeModel.findByIdAndUpdate(employee_id,
         { $set: { is_active: status } },
-        { upsert: true, new: true });
+        { new: true });
+      if (employee == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Employee Not Found With ID :- ${employee_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Employee Status Updated Successfully", allEmployee });
+        .json({ status: true, message: "Employee Status Updated Successfully", employee });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return attendanceModel.findOneAndUpdate(employee_id, body);
   },
   deleteEmployee: async (req, res) => {
     try {
 
       const { employee_id } = req.params
-      const allEmployee = await employeeModel.deleteOne({ employee_id: employee_id });
+      const employee = await employeeModel.findByIdAndDelete({ _id: employee_id });
+      if (employee == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Employee Not Found With ID :- ${employee_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Employee Deleted Successfully", allEmployee });
+        .json({ status: true, message: "Employee Deleted Successfully", employee });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

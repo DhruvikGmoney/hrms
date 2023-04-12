@@ -42,8 +42,12 @@ module.exports = {
   getAllExpenses: async (req, res) => {
     try {
 
-      const allExpenses = await expensesModel.find()//.populate("posts");
-
+      const allExpenses = await expensesModel.find()
+      if (allExpenses.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found In Database` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Expenses Get Successfully", allExpenses });
@@ -57,10 +61,15 @@ module.exports = {
     try {
 
       const { expenses_id } = req.params
-      const allExpenses = await expensesModel.findById({ _id: expenses_id });
+      const expenses = await expensesModel.findById({ _id: expenses_id });
+      if (expenses == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found With ID :- ${expenses_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Expenses Get Successfully", allExpenses });
+        .json({ status: true, message: "Expenses Get Successfully", expenses });
     } catch (err) {
       return res
         .status(500)
@@ -71,47 +80,59 @@ module.exports = {
     try {
 
       const { expenses_id } = req.params
-      const allExpenses = await expensesModel.updateOne({ expenses_id: expenses_id }, req.body);
+      const expenses = await expensesModel.findByIdAndUpdate({ _id: expenses_id }, req.body, { new: true });
+      if (expenses == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found With ID :- ${expenses_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Expenses Updated Successfully", allExpenses });
+        .json({ status: true, message: "Expenses Updated Successfully", expenses });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return expensesModel.findOneAndUpdate(expenses_id, body);
   },
   updateExpensesStatus: async (req, res) => {
     try {
 
       const { expenses_id, status } = req.params
-      const allExpenses = await expensesModel.findByIdAndUpdate(expenses_id,
+      const expenses = await expensesModel.findByIdAndUpdate(expenses_id,
         { $set: { is_active: status } },
-        { upsert: true, new: true });
+        { new: true });
+      if (expenses == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found With ID :- ${expenses_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Expenses Status Updated Successfully", allExpenses });
+        .json({ status: true, message: "Expenses Status Updated Successfully", expenses });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return attendanceModel.findOneAndUpdate(expenses_id, body);
   },
   deleteExpenses: async (req, res) => {
     try {
 
       const { expenses_id } = req.params
-      const allExpenses = await expensesModel.deleteOne({ expenses_id: expenses_id });
+      const expenses = await expensesModel.findByIdAndDelete({ _id: expenses_id });
+      if (expenses == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found With ID :- ${expenses_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Expenses Deleted Successfully", allExpenses });
+        .json({ status: true, message: "Expenses Deleted Successfully", expenses });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return airlineModel.findOneAndDelete(airline_id);
   },
 };

@@ -41,8 +41,12 @@ module.exports = {
   },
   getAllLeave: async (req, res) => {
     try {
-      const allLeave = await leaveModel.find()//.populate("posts");
-
+      const allLeave = await leaveModel.find()
+      if (allLeave.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found In Database` });
+      }
       return res
         .status(200)
         .json({ status: true, message: "Leave Get Successfully", allLeave });
@@ -56,10 +60,15 @@ module.exports = {
     try {
 
       const { leave_id } = req.params
-      const allLeave = await leaveModel.findById({ _id: leave_id });
+      const leave = await leaveModel.findById({ _id: leave_id });
+      if (leave == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With ID :- ${leave_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Leave Get Successfully", allLeave });
+        .json({ status: true, message: "Leave Get Successfully", leave });
     } catch (err) {
       return res
         .status(500)
@@ -70,47 +79,59 @@ module.exports = {
     try {
 
       const { leave_id } = req.params
-      const allLeave = await leaveModel.updateOne({ leave_id: leave_id }, req.body);
+      const leave = await leaveModel.findByIdAndUpdate({ _id: leave_id }, req.body, { new: true });
+      if (leave == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With ID :- ${leave_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Leave Updated Successfully", allLeave });
+        .json({ status: true, message: "Leave Updated Successfully", leave });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return leaveModel.findOneAndUpdate(leave_id, body);
   },
   updateLeaveStatus: async (req, res) => {
     try {
 
       const { leave_id, status } = req.params
-      const allLeave = await leaveModel.findByIdAndUpdate(leave_id,
+      const leave = await leaveModel.findByIdAndUpdate(leave_id,
         { $set: { is_active: status } },
-        { upsert: true, new: true });
+        { new: true });
+      if (leave == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With ID :- ${leave_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Leave Status Updated Successfully", allLeave });
+        .json({ status: true, message: "Leave Status Updated Successfully", leave });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return attendanceModel.findOneAndUpdate(leave_id, body);
   },
   deleteLeave: async (req, res) => {
     try {
 
       const { leave_id } = req.params
-      const allLeave = await leaveModel.deleteOne({ leave_id: leave_id });
+      const leave = await leaveModel.findByIdAndDelete({ _id: leave_id });
+      if (leave == null) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With ID :- ${leave_id} ` });
+      }
       return res
         .status(200)
-        .json({ status: true, message: "Leave Deleted Successfully", allLeave });
+        .json({ status: true, message: "Leave Deleted Successfully", leave });
     } catch (err) {
       return res
         .status(500)
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
-    // return airlineModel.findOneAndDelete(airline_id);
   },
 };
