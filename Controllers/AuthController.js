@@ -2,6 +2,7 @@ const { jwt_key } = require("../Config/Config");
 const employeeModel = require("../Models/EmployeeModel");
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { sendMail } = require('../Helpers/email')
 
 module.exports = {
   register: async (req, res) => {
@@ -108,6 +109,48 @@ module.exports = {
   },
   logout: async (req, res) => {
     return employeeModel.find();
+  },
+  sendOtp: async (req, res) => {
+    const otp = Math.floor(Math.random() * 9000 + 1000);
+    let {email} = req.body
+    console.log(otp,email);
+    const employee = await employeeModel.findOne({ email: email });
+    if (employee == null) {
+      return res
+        .status(404)
+        .json({ status: false, message: `Employee Not Found With Email :- ${email} ` });
+    }
+    else {
+      const employee = await employeeModel.findOneAndUpdate(email,
+        { $set: { otp: otp } },
+        { new: true });
+      sendMail(email, otp)
+      return res
+        .status(401)
+        .json({ message: `Otp Sent Successfully on ${email}, Please Check and Verify ✔` });
+    }
+  },
+  verify: async (req, res) => {
+    const { email, otp } = req.body
+    const employee = await employeeModel.findOne({ email: email });
+    if (employee == null) {
+      return res
+        .status(404)
+        .json({ status: false, message: `Employee Not Found With Email :- ${email} ` });
+    } else {
+      if (employee.otp == otp) {
+        const employee = await employeeModel.findOneAndUpdate(email,
+          { $set: { is_verified: true, is_active: true } },
+          { new: true });
+        return res
+          .status(200)
+          .json({ status: true, message: `Varification SuccessFully For Email :- ${email} ` });
+      } else {
+        return res
+          .status(404)
+          .json({ status: false, message: `Please Enter Valid OTP` });
+      }
+    }
   },
   changePassword: (employee_id) => {
     return employeeModel.findOne({ employee_id: employee_id });

@@ -55,6 +55,7 @@ const EmployeeSchema = new Schema(
     date_of_birth: { type: Date },
     date_of_hire: { type: Date },
     salary: { type: Number },
+    otp: { type: Number },
     health_status: { type: String, trim: true },
     marital_status: {
       type: String,
