@@ -64,6 +64,7 @@ const EmployeeSchema = new Schema(
       default: "UNMARRIED",
     },
     is_verified: { type: Boolean, default: false },
+    is_checke_in: { type: Boolean },
     is_active: { type: Boolean, default: false },
     last_login: { type: Date, default: Date.now },
     modifyed_by: { type: Schema.Types.ObjectId, ref: "employee" },

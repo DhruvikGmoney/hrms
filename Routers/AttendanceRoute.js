@@ -4,6 +4,8 @@ const authorize = require('../middleware/auth');
 const Role = require("../Helpers/role");
 const AttendanceController = require("../Controllers/AttendanceController");
 
+router.post("/checkeIn", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeIn);
+router.post("/checkeOut", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeOut);
 router.post("/addAttendance", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.addAttendance);
 router.get("/getAllAttendance", authorize(), AttendanceController.getAllAttendance);
 router.get("/getAttendanceById/:attendance_id", AttendanceController.getAttendanceById);
