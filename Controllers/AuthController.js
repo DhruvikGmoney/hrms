@@ -38,7 +38,7 @@ module.exports = {
     const user = await employeeModel.findOne({ email: email });
 
     if (user) {
-      return res.status(400).json({ message: "User already registered" });
+      return res.status(400).json({ status: false, message: "User already registered" });
     } else {
       const userData = new employeeModel({
         role,
@@ -73,7 +73,7 @@ module.exports = {
         .then((data) => {
           return res
             .status(201)
-            .json({ message: "User created Successfully", data });
+            .json({ status: true, message: "User created Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });
@@ -85,15 +85,19 @@ module.exports = {
     const user = await employeeModel.findOne({ email: email });
 
     if (!user) {
-      return res.status(404).json({ message: "User Not Found" });
+      return res.status(404).json({ status: false, message: "User Not Found" });
     }
     if (user.is_active == false) {
-      return res.status(404).json({ message: "User is Not Active" });
+      return res.status(404).json({ status: false, message: "User is Not Active" });
     }
     if (user.is_verified == false) {
-      return res.status(404).json({ message: "User is Not verified" });
+      return res.status(404).json({ status: false, message: "User is Not verified" });
     }
-    if (user.email == email && bcrypt.compare(password, user.password)) {
+    let pass = await bcrypt.compare(password, user.password);
+    // if (!pass) {
+    //   return res.status(404).json({ status: false, message: "Password is Incorect" });
+    // }
+    if (user.email == email && pass) {
       let token = jsonwebtoken.sign(
         { id: user._id, email: email, role: user.role },
         jwt_key, {
@@ -104,7 +108,7 @@ module.exports = {
     } else {
       return res
         .status(401)
-        .json({ message: "Please Provide Valid Email And Password" });
+        .json({ status: false, message: "Please Provide Valid Email And Password" });
     }
   },
   logout: async (req, res) => {
@@ -112,8 +116,8 @@ module.exports = {
   },
   sendOtp: async (req, res) => {
     const otp = Math.floor(Math.random() * 9000 + 1000);
-    let {email} = req.body
-    console.log(otp,email);
+    let { email, for_forgot } = req.body
+    console.log(otp, email);
     const employee = await employeeModel.findOne({ email: email });
     if (employee == null) {
       return res
@@ -121,13 +125,23 @@ module.exports = {
         .json({ status: false, message: `Employee Not Found With Email :- ${email} ` });
     }
     else {
-      const employee = await employeeModel.findOneAndUpdate(email,
-        { $set: { otp: otp } },
-        { new: true });
+      let purpose = ""
+      if (for_forgot) {
+        const employee = await employeeModel.findOneAndUpdate(email,
+          { $set: { forgot_otp: otp } },
+          { new: true });
+        purpose = "Forgot Password"
+      } else {
+        const employee = await employeeModel.findOneAndUpdate(email,
+          { $set: { otp: otp } },
+          { new: true });
+        purpose = "Verify Email"
+
+      }
       sendMail(email, otp)
       return res
         .status(401)
-        .json({ message: `Otp Sent Successfully on ${email}, Please Check and Verify ✔` });
+        .json({ status: true, message: `Otp Sent Successfully on ${email} for ${purpose}, Please Check and Verify ✔` });
     }
   },
   verify: async (req, res) => {
@@ -152,12 +166,46 @@ module.exports = {
       }
     }
   },
-  changePassword: (employee_id) => {
-    return employeeModel.findOne({ employee_id: employee_id });
-    // return employeeModel.findById(employee_id);
+  changePassword: async (req, res) => {
+    const { email, password, newPassword } = req.body
+    const salt = await bcrypt.genSalt(10);
+    const updatedPassword = await bcrypt.hash(newPassword, salt);
+    const user = await employeeModel.findOne({ email: email });
+
+    if (user.email == email && bcrypt.compare(password, user.password)) {
+      const employee = await employeeModel.findOneAndUpdate(email,
+        { $set: { password: updatedPassword } },
+        { new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: `Password Updated Successfully For Email :- ${email} ` });
+    } else {
+      return res
+        .status(401)
+        .json({ status: false, message: "Please Provide Valid Email And Password" });
+    }
   },
-  forgotPassword: (employee_id, body) => {
-    return employeeModel.updateOne({ employee_id: employee_id }, body);
-    // return employeeModel.findOneAndUpdate(employee_id, body);
+  forgotPassword: async (req, res) => {
+    const { email, otp, newPassword } = req.body
+    const salt = await bcrypt.genSalt(10);
+    const updatedPassword = await bcrypt.hash(newPassword, salt);
+    const user = await employeeModel.findOne({ email: email });
+    if (user == null) {
+      return res
+        .status(404)
+        .json({ status: false, message: `Employee Not Found With Email :- ${email} ` });
+    }
+    if (user.email == email && user.forgot_otp == otp) {
+      const employee = await employeeModel.findOneAndUpdate(email,
+        { $set: { password: updatedPassword } },
+        { new: true });
+      return res
+        .status(200)
+        .json({ status: true, message: `Password Updated Successfully For Email :- ${email} ` });
+    } else {
+      return res
+        .status(401)
+        .json({ status: false, message: "Please Provide Valid Email And Otp" });
+    }
   },
 };
