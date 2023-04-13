@@ -2,42 +2,48 @@ const expensesModel = require("../Models/ExpensesModel");
 
 module.exports = {
   addExpenses: async (req, res) => {
-    const {
-      amount,
-      purchased_at,
-      purchased_from,
-      quantity,
-      status,
-      description,
-      department_id,
-      is_verified,
-      is_active,
-      is_approved,
-      modifyed_by, } = req.body;
+    try {
+      const {
+        amount,
+        purchased_at,
+        purchased_from,
+        quantity,
+        status,
+        description,
+        department_id,
+        is_verified,
+        is_active,
+        is_approved,
+        modifyed_by, } = req.body;
 
-    const expensesData = new expensesModel({
-      amount,
-      purchased_at,
-      purchased_from,
-      quantity,
-      status,
-      description,
-      department_id,
-      is_verified,
-      is_active,
-      is_approved,
-      modifyed_by,
-    });
-    expensesData
-      .save()
-      .then((data) => {
-        return res
-          .status(201)
-          .json({ status: true, message: "Expenses Created Successfully", data });
-      })
-      .catch((error) => {
-        return res.status(400).json({ message: error.message, error: error });
+      const expensesData = new expensesModel({
+        amount,
+        purchased_at,
+        purchased_from,
+        quantity,
+        status,
+        description,
+        department_id,
+        is_verified,
+        is_active,
+        is_approved,
+        modifyed_by,
       });
+      expensesData
+        .save()
+        .then((data) => {
+          return res
+            .status(201)
+            .json({ status: true, message: "Expenses Created Successfully", data });
+        })
+        .catch((error) => {
+          return res.status(400).json({ message: error.message, error: error });
+        });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
   getAllExpenses: async (req, res) => {
     try {

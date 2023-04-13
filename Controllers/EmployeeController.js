@@ -2,30 +2,36 @@ const employeeModel = require("../Models/EmployeeModel");
 
 module.exports = {
   addEmployee: async (req, res) => {
-    const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } = req.body;
+    try {
+      const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } = req.body;
 
-    const user = await employeeModel.findOne({ email: email });
+      const user = await employeeModel.findOne({ email: email });
 
-    if (user) {
-      return res.status(400).json({ message: "User already registered" });
-    } else {
-      const userData = new employeeModel({
-        employee_id,
-        is_verified,
-        is_active,
-        modifyed_by,
-        checke_in_out,
-      });
-      userData
-        .save()
-        .then((data) => {
-          return res
-            .status(201)
-            .json({ message: "User Created Successfully", data });
-        })
-        .catch((error) => {
-          return res.status(400).json({ message: error.message, error: error });
+      if (user) {
+        return res.status(400).json({ message: "User already registered" });
+      } else {
+        const userData = new employeeModel({
+          employee_id,
+          is_verified,
+          is_active,
+          modifyed_by,
+          checke_in_out,
         });
+        userData
+          .save()
+          .then((data) => {
+            return res
+              .status(201)
+              .json({ message: "User Created Successfully", data });
+          })
+          .catch((error) => {
+            return res.status(400).json({ message: error.message, error: error });
+          });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
   getAllEmployee: async (req, res) => {

@@ -2,42 +2,48 @@ const leaveModel = require("../Models/LeaveModel");
 
 module.exports = {
   addLeave: async (req, res) => {
-    const {
-      employee_id,
-      type,
-      start_date,
-      end_date,
-      description,
-      status,
-      is_verified,
-      is_active,
-      is_approved,
-      approved_by,
-      modifyed_by, } = req.body;
+    try {
+      const {
+        employee_id,
+        type,
+        start_date,
+        end_date,
+        description,
+        status,
+        is_verified,
+        is_active,
+        is_approved,
+        approved_by,
+        modifyed_by, } = req.body;
 
-    const leaveData = new leaveModel({
-      employee_id,
-      type,
-      start_date,
-      end_date,
-      description,
-      status,
-      is_verified,
-      is_active,
-      is_approved,
-      approved_by,
-      modifyed_by,
-    });
-    leaveData
-      .save()
-      .then((data) => {
-        return res
-          .status(201)
-          .json({ status: true, message: "Leave Created Successfully", data });
-      })
-      .catch((error) => {
-        return res.status(400).json({ message: error.message, error: error });
+      const leaveData = new leaveModel({
+        employee_id,
+        type,
+        start_date,
+        end_date,
+        description,
+        status,
+        is_verified,
+        is_active,
+        is_approved,
+        approved_by,
+        modifyed_by,
       });
+      leaveData
+        .save()
+        .then((data) => {
+          return res
+            .status(201)
+            .json({ status: true, message: "Leave Created Successfully", data });
+        })
+        .catch((error) => {
+          return res.status(400).json({ message: error.message, error: error });
+        });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
   },
   getAllLeave: async (req, res) => {
     try {

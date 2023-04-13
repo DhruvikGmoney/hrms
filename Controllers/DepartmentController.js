@@ -2,30 +2,36 @@ const departmentModel = require("../Models/DepartmentModel");
 
 module.exports = {
   addDepartment: async (req, res) => {
-    const { manager_id, description, is_verified, is_active, modifyed_by } = req.body;
+    try {
+      const { manager_id, description, is_verified, is_active, modifyed_by } = req.body;
 
-    const department = await departmentModel.findOne({ email: email });
+      const department = await departmentModel.findOne({ email: email });
 
-    if (department) {
-      return res.status(400).json({ status: true, message: "Department already exists" });
-    } else {
-      const departmentData = new departmentModel({
-        manager_id,
-        description,
-        is_verified,
-        is_active,
-        modifyed_by,
-      });
-      departmentData
-        .save()
-        .then((department) => {
-          return res
-            .status(201)
-            .json({ status: true, message: "Department Created Successfully", department });
-        })
-        .catch((error) => {
-          return res.status(400).json({ message: error.message, error: error });
+      if (department) {
+        return res.status(400).json({ status: true, message: "Department already exists" });
+      } else {
+        const departmentData = new departmentModel({
+          manager_id,
+          description,
+          is_verified,
+          is_active,
+          modifyed_by,
         });
+        departmentData
+          .save()
+          .then((department) => {
+            return res
+              .status(201)
+              .json({ status: true, message: "Department Created Successfully", department });
+          })
+          .catch((error) => {
+            return res.status(400).json({ message: error.message, error: error });
+          });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
   getAllDepartment: async (req, res) => {

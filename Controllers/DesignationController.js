@@ -2,31 +2,37 @@ const designationModel = require("../Models/DesignationModel");
 
 module.exports = {
   addDesignation: async (req, res) => {
-    const { designation_name, description, is_verified, is_active, modifyed_by } = req.body;
+    try {
+      const { designation_name, description, is_verified, is_active, modifyed_by } = req.body;
 
-    const designation = await designationModel.findOne({ email: email });
+      const designation = await designationModel.findOne({ email: email });
 
-    if (designation) {
-      return res.status(400).json({ status: true, message: "Designation already exists" });
-    } else {
-      const designationData = new designationModel({
-        designation_name,
-        description,
-        is_verified,
-        is_active,
-        modifyed_by,
+      if (designation) {
+        return res.status(400).json({ status: true, message: "Designation already exists" });
+      } else {
+        const designationData = new designationModel({
+          designation_name,
+          description,
+          is_verified,
+          is_active,
+          modifyed_by,
 
-      });
-      designationData
-        .save()
-        .then((data) => {
-          return res
-            .status(201)
-            .json({ status: true, message: "Designation Created Successfully", data });
-        })
-        .catch((error) => {
-          return res.status(400).json({ message: error.message, error: error });
         });
+        designationData
+          .save()
+          .then((data) => {
+            return res
+              .status(201)
+              .json({ status: true, message: "Designation Created Successfully", data });
+          })
+          .catch((error) => {
+            return res.status(400).json({ message: error.message, error: error });
+          });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
   getAllDesignation: async (req, res) => {
