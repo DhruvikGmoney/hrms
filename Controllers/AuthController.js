@@ -8,30 +8,8 @@ module.exports = {
   register: async (req, res) => {
     try {
       const {
-        role,
-        first_name,
-        middle_name,
-        last_name,
-        address,
-        pincode,
-        country,
-        state,
-        city,
-        phone,
         email,
-        gender,
-        department_id,
-        designation_id,
-        manager_id,
-        job_id,
-        shift,
-        date_of_birth,
-        date_of_hire,
-        salary,
-        is_verified,
-        is_active,
-        last_login,
-        modifyed_by, } = req.body;
+      } = req.body;
 
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(req.body.password, salt);
@@ -42,32 +20,8 @@ module.exports = {
         return res.status(400).json({ status: false, message: "User already registered" });
       } else {
         const userData = new employeeModel({
-          role,
-          first_name,
-          middle_name,
-          last_name,
-          full_name: first_name + " " + middle_name + " " + last_name,
-          address,
-          pincode,
-          country,
-          state,
-          city,
-          phone,
           email,
           password,
-          gender,
-          department_id,
-          designation_id,
-          manager_id,
-          job_id,
-          shift,
-          date_of_birth,
-          date_of_hire,
-          salary,
-          is_verified,
-          is_active,
-          last_login,
-          modifyed_by,
         });
         userData
           .save()

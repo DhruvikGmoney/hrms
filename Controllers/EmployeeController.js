@@ -1,9 +1,37 @@
 const employeeModel = require("../Models/EmployeeModel");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
   addEmployee: async (req, res) => {
     try {
-      const { employee_id, is_verified, is_active, modifyed_by, checke_in_out } = req.body;
+      const {
+        role,
+        first_name,
+        middle_name,
+        last_name,
+        address,
+        pincode,
+        country,
+        state,
+        city,
+        phone,
+        email,
+        gender,
+        department_id,
+        designation_id,
+        manager_id,
+        job_id,
+        shift,
+        date_of_birth,
+        date_of_hire,
+        salary,
+        is_verified,
+        is_active,
+        last_login,
+        modifyed_by, } = req.body;
+
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(req.body.password, salt);
 
       const user = await employeeModel.findOne({ email: email });
 
@@ -11,11 +39,32 @@ module.exports = {
         return res.status(400).json({ message: "User already registered" });
       } else {
         const userData = new employeeModel({
-          employee_id,
+          role,
+          first_name,
+          middle_name,
+          last_name,
+          full_name: first_name + " " + middle_name + " " + last_name,
+          address,
+          pincode,
+          country,
+          state,
+          city,
+          phone,
+          email,
+          password,
+          gender,
+          department_id,
+          designation_id,
+          manager_id,
+          job_id,
+          shift,
+          date_of_birth,
+          date_of_hire,
+          salary,
           is_verified,
           is_active,
+          last_login,
           modifyed_by,
-          checke_in_out,
         });
         userData
           .save()
