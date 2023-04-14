@@ -8,6 +8,7 @@ router.post("/addLeave", authorize([Role.ADMIN, Role.SUPER_ADMIN]), LeaveControl
 router.get("/getAllLeave", authorize(), LeaveController.getAllLeave);
 router.get("/getLeaveById/:leave_id", LeaveController.getLeaveById);
 router.get("/getLeaveByUserId/:employee_id", LeaveController.getLeaveByUserId);
+router.get("/getLeaveByStatus/:status", LeaveController.getLeaveByStatus);
 router.get("/getLeaveByDate/:start_date/:end_date", LeaveController.getLeaveByDate);
 router.put("/updateLeave/:leave_id", LeaveController.updateLeave);
 router.put("/updateLeaveStatus/:leave_id/:status", LeaveController.updateLeaveStatus);

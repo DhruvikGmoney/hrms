@@ -7,6 +7,7 @@ const ExpensesController = require("../Controllers/ExpensesController");
 router.post("/addExpenses", authorize([Role.ADMIN, Role.SUPER_ADMIN]), ExpensesController.addExpenses);
 router.get("/getAllExpenses", authorize(), ExpensesController.getAllExpenses);
 router.get("/getExpensesById/:expenses_id", ExpensesController.getExpensesById);
+router.get("/getExpensesByStatus/:status", ExpensesController.getExpensesByStatus);
 router.put("/updateExpenses/:expenses_id", ExpensesController.updateExpenses);
 router.put("/updateExpensesStatus/:expenses_id/:status", ExpensesController.updateExpensesStatus);
 router.delete("/deleteExpenses/:expenses_id", ExpensesController.deleteExpenses);

@@ -80,6 +80,24 @@ module.exports = {
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
+  getExpensesByStatus: async (req, res) => {
+    try {
+      const { status } = req.params
+      const expenses = await expensesModel.find({ status: status });
+      if (expenses.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Expenses Not Found With Status :- ${status} ` });
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: "Expenses Get Successfully", expenses });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+  },
   updateExpenses: async (req, res) => {
     try {
       const { expenses_id } = req.params

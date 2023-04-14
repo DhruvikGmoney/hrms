@@ -111,6 +111,24 @@ module.exports = {
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
+  getLeaveByStatus: async (req, res) => {
+    try {
+      const { status } = req.params
+      const leave = await leaveModel.find({ status: status });
+      if (leave.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With Status :- ${status} ` });
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Get Successfully", leave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+  },
   getLeaveByDate: async (req, res) => {
     try {
       const { start_date, end_date } = req.params
