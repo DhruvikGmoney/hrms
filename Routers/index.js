@@ -8,8 +8,12 @@ const EmployeeRoute = require("./EmployeeRoute");
 const ExpensesRoute = require("./ExpensesRoute");
 const LeaveRoute = require("./LeaveRoute");
 
+router.get("/", (req, res) => {
+  res.send(`Welcome To Hrms Portal With Version V1`);
+});
+
 router.use(
-  "/api",
+  "/v1",
   AuthRoute,
   AttendanceRoute,
   DepartmentRoute,

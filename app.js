@@ -9,7 +9,12 @@ database();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(indexRouter);
+
+app.get("/", (req, res) => {
+  res.send(`Welcome To Hrms Portal, Currently You are in ${req.app.get('env')} Mode`);
+});
+
+app.use("/api", indexRouter);
 
 // app.use((req, res, next) => {
 //   res.status(404).json({ message: "Page Not Found" });
@@ -33,6 +38,6 @@ app.listen(port, () => {
   if (env == 'local') {
     console.log(`Server is Running on Port No :- http://localhost:${port}`);
   } else {
-    console.log(`Server is Running on Port No :- https://hrms-dhy1.onrender.com`);
+    console.log(`Server is Running on :- https://hrms-dhy1.onrender.com`);
   }
 });
