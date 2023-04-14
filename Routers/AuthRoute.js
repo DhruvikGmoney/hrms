@@ -3,7 +3,8 @@ const router = express.Router();
 const AuthController = require("../Controllers/AuthController");
 
 router.get("/", (req, res) => {
-  res.send("Welcome To Hrms");
+  console.log(">>>>>>", req.app.get('env'));
+  res.send(`Welcome To Hrms ${req.app.get('env')}`);
 });
 
 router.post("/register", AuthController.register);

@@ -1,4 +1,4 @@
-const { port } = require("./Config/Config");
+const { port, env } = require("./Config/Config");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -30,5 +30,9 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(port, () => {
-  console.log(`Server is Running on Port No :- http://localhost:${port}`);
+  if (env == 'local') {
+    console.log(`Server is Running on Port No :- http://localhost:${port}`);
+  } else {
+    console.log(`Server is Running on Port No :- https://hrms-dhy1.onrender.com`);
+  }
 });

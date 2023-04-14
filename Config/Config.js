@@ -7,4 +7,5 @@ module.exports = {
   jwt_key: process.env.JWT_SECRET_KEY,
   user: process.env.USER,
   password: process.env.PASSWORD,
+  env: process.env.ENV,
 };
