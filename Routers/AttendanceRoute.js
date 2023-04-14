@@ -9,6 +9,7 @@ router.post("/checkeOut", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceC
 router.post("/addAttendance", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.addAttendance);
 router.get("/getAllAttendance", authorize(), AttendanceController.getAllAttendance);
 router.get("/getAttendanceByEmployeeIdAndDate/:employee_id/:date", AttendanceController.getAttendanceByEmployeeIdAndDate);
+router.get("/getHoursByEmployeeIdAndDate/:employee_id/:date", AttendanceController.getHoursByEmployeeIdAndDate);
 router.get("/getAttendanceById/:attendance_id", AttendanceController.getAttendanceById);
 router.put("/updateAttendance/:attendance_id", AttendanceController.updateAttendance);
 router.patch("/updateAttendanceStatus/:attendance_id/:status", AttendanceController.updateAttendanceStatus);
