@@ -17,10 +17,11 @@ module.exports = {
           .json({ status: false, message: `Employee Already Check In :- ${employee_id} ` });
       }
       const date = new Date();
-      console.log(date);
+      let sortDate = new Date().toJSON().slice(0, 10);
       const attendanceData = new attendanceModel({
         employee_id,
         modifyed_by,
+        date: sortDate,
         is_checke_in: true,
         checke_in: date
       });
@@ -58,9 +59,11 @@ module.exports = {
           .json({ status: false, message: `Employee Already Check Out :- ${employee_id} ` });
       }
       const date = new Date();
+      let sortDate = new Date().toJSON().slice(0, 10);
       const attendanceData = new attendanceModel({
         employee_id,
         modifyed_by,
+        date: sortDate,
         is_checke_out: true,
         checke_out: date
       });
@@ -136,6 +139,28 @@ module.exports = {
         return res
           .status(404)
           .json({ status: false, message: `Attendance Not Found With ID :- ${attendance_id} ` });
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: "Attendance Get Successfully", attendance });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+  },
+  getAttendanceByEmployeeIdAndDate: async (req, res) => {
+    try {
+      const { employee_id, date } = req.params
+
+      const attendance = await attendanceModel.find({
+        employee_id: employee_id, date: date
+      });
+      console.log(attendance);
+      if (attendance.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Attendance Not Found ` });
       }
       return res
         .status(200)
