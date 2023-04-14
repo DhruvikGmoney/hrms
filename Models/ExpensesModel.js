@@ -10,7 +10,7 @@ ExpensesSchema = new Schema(
     quantity: { type: Number, default: 1 },
     status: {
       type: String,
-      enum: ["PAID ", "PENDING"],
+      enum: ["PAID", "PENDING"],
       default: "PENDING",
     },
     description: { type: String, trim: true },

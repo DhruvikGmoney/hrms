@@ -16,11 +16,24 @@ module.exports = {
         approved_by,
         modifyed_by, } = req.body;
 
+      if (type == "FULLDAY" && start_date == end_date) {
+        return res.status(401).json({ status: false, message: "Start Date And End Date Should Not Be Same For Full Day Leave" })
+      }
+      if (type == "HALFDAY" && start_date != end_date) {
+        return res.status(401).json({ status: false, message: "Start Date And End Date Should Be Same For Half Day Leave" })
+      }
+      var d1 = new Date(start_date);
+      var d2 = new Date(end_date);
+      var diff = d2.getDay() - d1.getDay()
+
+      let day = (type == "FULLDAY") ? diff : 0.5;
+
       const leaveData = new leaveModel({
         employee_id,
         type,
         start_date,
         end_date,
+        days: day,
         description,
         status,
         is_verified,
@@ -34,7 +47,7 @@ module.exports = {
         .then((data) => {
           return res
             .status(201)
-            .json({ status: true, message: "Leave Created Successfully", data });
+            .json({ status: true, message: "Leave Apply Successfully", data });
         })
         .catch((error) => {
           return res.status(400).json({ message: error.message, error: error });
