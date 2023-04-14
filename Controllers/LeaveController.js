@@ -93,6 +93,42 @@ module.exports = {
         .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
     }
   },
+  getLeaveByUserId: async (req, res) => {
+    try {
+      const { employee_id } = req.params
+      const leave = await leaveModel.find({ employee_id: employee_id });
+      if (leave.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found With User ID :- ${employee_id} ` });
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Get Successfully", leave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+  },
+  getLeaveByDate: async (req, res) => {
+    try {
+      const { start_date, end_date } = req.params
+      const leave = await leaveModel.find({ $and: [{ start_date: { $gte: new Date(start_date) } }, { end_date: { $lte: new Date(end_date) } }] })
+      if (leave.length == 0) {
+        return res
+          .status(404)
+          .json({ status: false, message: `Leave Not Found Between :- ${start_date} - ${end_date} ` });
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: "Leave Get Successfully", leave });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ status: false, message: 'Server Error', error: err.message || err.toString() });
+    }
+  },
   updateLeave: async (req, res) => {
     try {
       const { leave_id } = req.params
