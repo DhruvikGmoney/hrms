@@ -141,7 +141,7 @@ module.exports = {
   getAttendanceById: async (req, res) => {
     try {
       const { attendance_id } = req.params
-      const attendance = await attendanceModel.findById({ _id: attendance_id }).populate({ path: 'employee_id', select: 'role' });;
+      const attendance = await attendanceModel.findById({ _id: attendance_id }).populate({ path: 'employee_id', select: 'role' });
       if (attendance == null) {
         return res
           .status(404)

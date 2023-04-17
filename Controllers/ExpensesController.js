@@ -47,7 +47,7 @@ module.exports = {
   },
   getAllExpenses: async (req, res) => {
     try {
-      const allExpenses = await expensesModel.find()
+      const allExpenses = await expensesModel.find().populate('department_id');
       if (allExpenses.length == 0) {
         return res
           .status(404)

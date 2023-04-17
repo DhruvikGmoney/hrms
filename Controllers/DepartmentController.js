@@ -3,15 +3,16 @@ const departmentModel = require("../Models/DepartmentModel");
 module.exports = {
   addDepartment: async (req, res) => {
     try {
-      const { manager_id, description, is_verified, is_active, modifyed_by } = req.body;
+      const { manager_id, department_name, description, is_verified, is_active, modifyed_by } = req.body;
 
-      const department = await departmentModel.findOne({ email: email });
+      const department = await departmentModel.findOne({ department_name: department_name });
 
       if (department) {
         return res.status(400).json({ status: true, message: "Department already exists" });
       } else {
         const departmentData = new departmentModel({
           manager_id,
+          department_name,
           description,
           is_verified,
           is_active,
@@ -110,7 +111,7 @@ module.exports = {
   deleteDepartment: async (req, res) => {
     try {
       const { department_id } = req.params
-      const department = await departmentModel.findByIdAndDelete({ _id: department_id });
+      const department = await departmentModel.deleteMany({ _id: department_id });
       if (department == null) {
         return res
           .status(404)
