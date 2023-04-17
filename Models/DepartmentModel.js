@@ -19,27 +19,33 @@ const DepartmentSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-DepartmentSchema.pre('deleteMany', function (next) {
-  const departmentId = this.getQuery()['_id'];
-  console.log('Removing doc!', departmentId);
-  expensesModel.find({ department_id: departmentId }, function (err, properties) {
-    if (err) {
-      console.log("No property found in this project");
-    } else if (properties.length == 0) {
-      console.log("No property found in this project");
-    } else {
-      for (var i = 0; i < properties.length; i++) {
-        properties[i].remove(function (delete_err, delete_data) {
-          if (delete_err) {
-            console.log("No property found in this project");
-          } else {
-            console.log("Properties deleted");
-          }
-        });
-      }
-    }
-  });
-  next();
+DepartmentSchema.pre('deleteOne', { document: false, query: true }, async function () {
+  const doc = await this.model.findOne(this.getFilter());
+  await expensesModel.deleteMany({ department_id: doc._id });
 });
+
+
+// DepartmentSchema.pre('deleteMany', function (next) {
+//   const departmentId = this.getQuery()['_id'];
+//   console.log('Removing doc!', departmentId);
+//   expensesModel.find({ department_id: departmentId }, function (err, properties) {
+//     if (err) {
+//       console.log("No property found in this project");
+//     } else if (properties.length == 0) {
+//       console.log("No property found in this project");
+//     } else {
+//       for (var i = 0; i < properties.length; i++) {
+//         properties[i].remove(function (delete_err, delete_data) {
+//           if (delete_err) {
+//             console.log("No property found in this project");
+//           } else {
+//             console.log("Properties deleted");
+//           }
+//         });
+//       }
+//     }
+//   });
+//   next();
+// });
 
 module.exports = mongoose.model("department", DepartmentSchema);

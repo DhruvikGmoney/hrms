@@ -4,15 +4,18 @@ const authorize = require('../Middleware/auth');
 const Role = require("../Helpers/role");
 const AttendanceController = require("../Controllers/AttendanceController");
 
-router.post("/checkeIn", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeIn);
-router.post("/checkeOut", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeOut);
-router.post("/addAttendance", authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.addAttendance);
-router.get("/getAllAttendance", authorize(), AttendanceController.getAllAttendance);
-router.get("/getAttendanceByEmployeeIdAndDate/:employee_id/:date", AttendanceController.getAttendanceByEmployeeIdAndDate);
-router.get("/getHoursByEmployeeIdAndDate/:employee_id/:date", AttendanceController.getHoursByEmployeeIdAndDate);
-router.get("/getAttendanceById/:attendance_id", AttendanceController.getAttendanceById);
-router.put("/updateAttendance/:attendance_id", AttendanceController.updateAttendance);
-router.patch("/updateAttendanceStatus/:attendance_id/:status", AttendanceController.updateAttendanceStatus);
-router.delete("/deleteAttendance/:attendance_id", AttendanceController.deleteAttendance);
+router.route('/checke-in')
+    .post(authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeIn)
 
+router.route('/checke-out')
+    .post(authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.checkeOut)
+
+router.route('/attendance')
+    .post(authorize([Role.ADMIN, Role.SUPER_ADMIN]), AttendanceController.addAttendance)
+    .get(authorize(), AttendanceController.getAllAttendance);
+
+router.route('/attendance/:attendance_id')
+    .get(AttendanceController.getAttendanceById)
+    .put(AttendanceController.updateAttendance)
+    .delete(AttendanceController.deleteAttendance);
 module.exports = router;

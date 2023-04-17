@@ -141,7 +141,35 @@ module.exports = {
   getAttendanceById: async (req, res) => {
     try {
       const { attendance_id } = req.params
-      const attendance = await attendanceModel.findById({ _id: attendance_id }).populate({ path: 'employee_id', select: 'role' });
+      const { employee_id, date, hours } = req.query
+      let attendance
+
+      if (hours) {
+        attendance = await attendanceModel.find({
+          employee_id: employee_id, date: date, is_checke_out: true
+        }).select("hours");
+        if (attendance.length == 0) {
+          return res
+            .status(404)
+            .json({ status: false, message: `Attendance Not Found ` });
+        }
+        const hours = attendance.reduce((acc, o) => acc + parseFloat(o.hours), 0)
+        return res
+          .status(200)
+          .json({ status: true, message: `Total Hours Of Employee Id:- ${employee_id} For Date:- ${date}`, hours });
+      } else if (employee_id && date) {
+        attendance = await attendanceModel.find({
+          employee_id: employee_id, date: date
+        }).sort({ createdAt: 1 });
+        if (attendance.length == 0) {
+          return res
+            .status(404)
+            .json({ status: false, message: `Attendance Not Found ` });
+        }
+      }
+      else {
+        attendance = await attendanceModel.findById({ _id: attendance_id }).populate({ path: 'employee_id', select: 'role' });
+      }
       if (attendance == null) {
         return res
           .status(404)

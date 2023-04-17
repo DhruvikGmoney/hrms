@@ -111,7 +111,7 @@ module.exports = {
   deleteDepartment: async (req, res) => {
     try {
       const { department_id } = req.params
-      const department = await departmentModel.deleteMany({ _id: department_id });
+      const department = await departmentModel.deleteOne({ _id: department_id });
       if (department == null) {
         return res
           .status(404)

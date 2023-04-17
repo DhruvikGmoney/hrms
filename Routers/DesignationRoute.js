@@ -4,11 +4,11 @@ const authorize = require('../Middleware/auth');
 const Role = require("../Helpers/role");
 const DesignationController = require("../Controllers/DesignationController");
 
-router.post("/addDesignation", authorize([Role.ADMIN, Role.SUPER_ADMIN]), DesignationController.addDesignation);
-router.get("/getAllDesignation", authorize(), DesignationController.getAllDesignation);
-router.get("/getDesignationById/:designation_id", DesignationController.getDesignationById);
-router.put("/updateDesignation/:designation_id", DesignationController.updateDesignation);
-router.put("/updateDesignationStatus/:designation_id/:status", DesignationController.updateDesignationStatus);
-router.delete("/deleteDesignation/:designation_id", DesignationController.deleteDesignation);
+router.post("/designation", authorize([Role.ADMIN, Role.SUPER_ADMIN]), DesignationController.addDesignation);
+router.get("/designation", authorize(), DesignationController.getAllDesignation);
+router.get("/designation/:designation_id", DesignationController.getDesignationById);
+router.put("/designation/:designation_id", DesignationController.updateDesignation);
+router.put("/designation/:designation_id/:status", DesignationController.updateDesignationStatus);
+router.delete("/designation/:designation_id", DesignationController.deleteDesignation);
 
 module.exports = router;
