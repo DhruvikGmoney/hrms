@@ -47,6 +47,10 @@ const EmployeeSchema = new Schema(
       enum: ["MALE", "FEMALE", "OTHER"],
       default: "MALE",
     },
+    blood_group: {
+      type: String,
+      enum: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-",]
+    },
     department_id: { type: Schema.Types.ObjectId, ref: "department" },
     designation_id: { type: Schema.Types.ObjectId, ref: "designation" },
     manager_id: { type: Schema.Types.ObjectId, ref: "employee" },
@@ -54,10 +58,16 @@ const EmployeeSchema = new Schema(
     shift: { type: String, enum: ["DAY", "NIGHT"], default: "DAY" },
     date_of_birth: { type: Date },
     date_of_hire: { type: Date },
+    date_of_leave: { type: Date },
     salary: { type: Number },
     otp: { type: Number },
     forgot_otp: { type: Number },
     health_status: { type: String, trim: true },
+    employee_status: {
+      type: String,
+      enum: ["FULL_TIME", "PART_TIME", "TEMPORARY", "INTERNS", "SEASONAL", "LEASED"],
+      default: "FULL_TIME",
+    },
     marital_status: {
       type: String,
       enum: ["MARRIED", "UNMARRIED"],

@@ -14,9 +14,14 @@ const LeaveSchema = new Schema(
       enum: ["FULLDAY", "HALFDAY"],
       default: "FULLDAY",
     },
-    start_date: { type: Date, required: true },
-    end_date: { type: Date, required: true },
-    days: { type: Number },
+    leave_type: {
+      type: String,
+      enum: ["PAID", "UNPAID"],
+      default: "PAID",
+    },
+    leave_from: { type: Date, required: true },
+    leave_to: { type: Date, required: true },
+    leave_duration: { type: Number },
     description: { type: String, trim: true },
     status: {
       type: String,
